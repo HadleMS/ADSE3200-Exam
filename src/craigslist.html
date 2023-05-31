@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:visibility="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="logo.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <title>Craigslist</title>
+  <style>
+    :root {
+      --primary-color: #333;
+      --secondary-color: #666;
+      --background-color: #f2f2f2;
+      --text-color: #fff;
+      --link-color: #333;
+      --hover-color: #999;
+      --shadow-color: rgba(0, 0, 0, 0.1);
+      --accent-color: #eaf4ff;
+      --font-family: Arial, sanZs-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+
+
+    body {
+      font-family: var(--font-family);
+      background-color: var(--background-color);
+      margin: 0;
+      padding: 0;
+
+    }
+
+
+    header {
+      position: relative;
+      background-color: rgb(43, 43, 43);
+      color: white;
+      padding: 2%;
+      text-align: center;
+      font-family: Arial, sans-serif;
+    }
+
+    header h1 {
+      font-size: 300%;
+      margin: 0;
+      position: absolute;
+      top: 50%;
+      left: 8%;
+      transform: translateY(-50%);
+    }
+
+    header p {
+      font-size: 1.6%;
+      margin: 0.63% 0 0;
+    }
+
+    header a {
+      color: white;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    header a:hover {
+      color: rgb(107,63,160);
+    }
+
+    nav {
+
+    }
+
+    nav ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    nav ul li {
+      margin: 0 0.5%;
+      position: relative;
+    }
+
+    nav ul li a {
+      padding: 10px;
+      text-decoration: none;
+      color: var(--text-color);
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    nav ul li a:hover {
+      background-color: var(--hover-color);
+      border-radius: 4px;
+    }
+
+    .popup-menu {
+      position: absolute;
+      display: none;
+      background-color: rgb(43, 43, 43);
+      box-shadow: 0 0.33% 0.67% var(--shadow-color);
+      padding: 2.5%;
+      z-index: 999;
+      border-radius: 4px;
+      color: var(--text-color);
+    }
+
+    .popup-menu ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+
+    .popup-menu a {
+      display: block;
+      margin-bottom: 5px;
+      padding: 5px;
+      color: var(--text-color);
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+    }
+
+    .popup-menu a:hover {
+      background-color: var(--hover-color);
+    }
+
+    li:hover .popup-menu {
+      display: block;
+    }
+
+    main {
+      display: flex;
+      max-width: 800px;
+      margin: 1% auto;
+      padding: 1%;
+      background-color: #fff;
+      box-shadow: 0 0.33% 0.67% var(--shadow-color);
+    }
+
+    .sidebar {
+      width: 37.5%;
+      margin-right: 5%;
+      background-color: var(--accent-color);
+      padding: 2.5%;
+      border-radius: 4px;
+    }
+    .sidebar h2 {
+      font-size: 3.75%;
+      margin: 0 0 1.25%;
+    }
+
+    .sidebar p {
+      font-size: 1.6%;
+      margin: 0 0 2.5%;
+    }
+
+    .calendar {
+      width: 300px;
+      position: absolute;
+      top: 20%;
+      left: 1%;
+      padding: 10px;
+      border: 2px solid black;
+      font-family: Arial, sans-serif;
+      text-align: left;
+      background-color: white;
+    }
+
+    .calendar-header {
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      padding: 10px;
+    }
+
+    .calendar-days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 5px;
+      margin-top: 10px;
+    }
+
+    .calendar-day {
+      text-align: center;
+      padding: 5px;
+      background-color: #eee;
+    }
+
+    .calendar-day.today {
+      background-color: #333;
+      color: #fff;
+    }
+    .calendar-day:hover {
+      background-color: #ccc;
+      cursor: pointer;
+    }
+
+    .calendar-day:hover::after {
+      content: attr(data-date);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+    }
+
+    .content {
+      flex: 1;
+    }
+
+
+    h1 {
+      font-size: 75px;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      font-family: "Times New Roman";
+    }
+
+    .category {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+
+    .category a {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 200px;
+      height: 150px;
+      margin: 10px;
+      padding: 10px;
+      background-color: rgba(238, 238, 238, 0.7);
+      border-radius: 4px;
+      text-decoration: none;
+      color: white;
+      text-align: center;
+      transition: background-color 0.3s ease;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      font-weight: bold;
+      background-size: cover;
+      background-position: center;
+    }
+
+
+    .category a i {
+      margin-right: 5px;
+    }
+
+
+    .category a span {
+      position: relative;
+      z-index: 1;
+    }
+
+
+    .category a::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      border-radius: 4px;
+      z-index: 0;
+    }
+
+    .category a:hover {
+      background-color: rgba(221, 221, 221, 0.7);
+    }
+
+
+    .category a:hover span {
+      color: black;
+      transition: color 0.3s ease;
+    }
+
+    .category a:hover::before {
+      background-color: rgba(0, 0, 0, 0.4);
+      transition: background-color 0.3s ease;
+    }
+
+    .featured-listing {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .listing-image {
+      width: 200px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .listing-details {
+      flex: 1;
+      padding: 10px;
+    }
+
+    .listing-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .listing-description {
+      color: #666;
+      margin-bottom: 5px;
+    }
+
+    .listing-price {
+      font-weight: bold;
+      color: #333;
+    }
+
+    .account-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px;
+      background-color: #f2f2f2;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .create-account-button,
+    .my-account-button {
+      padding: 12px 12px;
+      background-color: #333;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+
+    .create-account-button:hover,
+    .my-account-button:hover {
+      background-color: #444;
+    }
+
+    .search-bar {
+      position: absolute;
+      top: 30%;
+      right: 15%;
+      display: flex;
+      align-items: center;
+
+    }
+
+    .search-input {
+      padding: 5%;
+      border: none;
+      border-radius: 4px;
+      font-size: 70%;
+    }
+
+    .search-button {
+      padding: 5% 5%;
+      background-color: #333;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+      margin-left: 1.5625%;
+    }
+
+    .search-button:hover {
+      background-color: #444;
+    }
+
+
+
+    footer {
+      background-color: #f5f5f5;
+      padding: 1%;
+      text-align: center;
+      color: #666;
+      font-size: 90%;
+    }
+
+    .footer-links {
+      margin-bottom: 10px;
+    }
+
+    .footer-links a {
+      color: #666;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+
+    .footer-text {
+      margin-top: 10px;
+    }
+
+    ul.clfooter {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      text-align: center;
+    }
+
+    ul.clfooter li {
+      display: inline-block;
+      margin: 0 10px;
+
+    }
+
+    ul.clfooter li a {
+      color: blue;
+      text-decoration: none;
+    }
+
+    ul.clfooter li a:hover {
+      text-decoration: underline;
+    }
+
+    ::-webkit-scrollbar {
+      width: 10px;
+      background-color: #f5f5f5;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background-color: var(--secondary-color);
+
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background-color: var(--hover-color);
+    }
+    .featured-listing:hover {
+      transform: scale(1.01);
+      transition: transform 0.3s ease;
+    }
+
+
+    .featured-listing:hover {
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+
+    .featured-listing:hover .listing-title {
+      color: rebeccapurple;
+      transition: color 0.3s ease;
+    }
+
+    .featured-listing:hover .listing-description {
+      color: rebeccapurple;
+      transition: color 0.3s ease;
+    }
+
+    .listing-image {
+      margin-right: 10px;
+    }
+
+    .listing-title {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .listing-description {
+      margin-top: 5px;
+    }
+
+    .listing-price {
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .pagination .page-number {
+      padding: 5px 10px;
+      border: 1px solid #ccc;
+      margin-right: 5px;
+      cursor: pointer;
+    }
+    .pagination .page-number:hover {
+      background-color: #ccc;
+      color: white;
+    }
+
+    .location-selector {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .location-selector label {
+      margin-right: 2%;
+      white-space: nowrap;
+    }
+
+    .location-selector input[type="radio"] {
+      display: none;
+    }
+
+    .location-selector input[type="radio"] + label {
+      padding: 0.5% 1%;
+      background-color: #e0e0e0;
+      border-radius: 3px;
+      cursor: pointer;
+      text-align: center;
+      line-height: 1.2;
+    }
+
+    .location-selector input[type="radio"]:checked + label {
+      background-color: #a0a0a0;
+      color: white;
+    }
+
+    .location-selector input[type="radio"] + label:hover {
+      background-color: #d0d0d0;
+    }
+
+    .location-selector input[type="radio"] + label:hover::after,
+    .location-selector input[type="radio"]:checked + label:hover::after {
+      content: attr(data-location);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+    }
+
+
+    .menu-container {
+      position: absolute;
+      top: 40%;
+      right: 8%;
+      display: flex;
+      align-items: center;
+      z-index: 2;
+    }
+
+    .menu-btn {
+      display: inline-block;
+      cursor: pointer;
+
+    }
+
+    .menu-btn span {
+      display: block;
+      width: 25px;
+      height: 3px;
+      margin-bottom: 20%;
+      background-color: #000;
+      transition: all 0.3s ease-in-out;
+    }
+
+    .menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 1000%;
+      background-color: #fff;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      padding: 1%;
+      list-style-type: none;
+      display: none;
+
+    }
+
+    .menu li {
+      margin-bottom: 5%;
+    }
+
+    .menu a {
+      color: #000;
+      text-decoration: none;
+    }
+
+    .menu-divider {
+      height: 1px;
+      background-color: #ccc;
+      margin: 10px 0;
+
+    }
+
+
+    input[type="checkbox"]:checked + .menu-btn span:nth-child(1) {
+      transform: translateY(8px) rotate(45deg) ;
+    }
+
+    input[type="checkbox"]:checked + .menu-btn span:nth-child(2) {
+      opacity: 0;
+    }
+
+    input[type="checkbox"]:checked + .menu-btn span:nth-child(3) {
+      transform: translateY(-8px) rotate(-45deg);
+    }
+
+    input[type="checkbox"]:checked ~ .menu {
+      display: block;
+    }
+    .select-container {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+
+    #chlang {
+      padding: 0.5%;
+      font-size: 100%;
+      border-radius: 1%;
+      border: 1px solid #ccc;
+      background-color: #f2f2f2;
+      color: #333;
+      outline: none;
+      position: absolute;
+      top: 1%;
+      right: 0.5%;
+    }
+
+    #chlang::-ms-expand {
+      display: none;
+    }
+
+    #chlang::after {
+      content: '\25BC';
+      position: absolute;
+      top: 50%;
+      right: 10%;
+      transform: translateY(-50%);
+      color: #666;
+      pointer-events: none;
+    }
+
+
+    .create-posting-button {
+      display: inline-block;
+      padding: 12px 12px;
+      font-size: 16px;
+      font-weight: bold;
+      text-decoration: none;
+      border-radius: 4px;
+      background-color: rebeccapurple;
+      color: #fff;
+      transition: background-color 0.3s ease;
+    }
+
+    .create-posting-button:hover {
+      background-color: mediumpurple;
+    }
+
+    .logo {
+      position: absolute;
+      top: 60%;
+      left: -50px;
+      transform: translate(-50%, -50%);
+    }
+
+    .titletext {
+      font-size: 35px;
+      top: 30px;
+      color: black;
+      text-align: center;
+
+    }
+
+
+
+    body {
+      background-color: #f2f2f2;
+      color: #333;
+      transition: background-color 0.4s;
+    }
+
+    .dark-mode {
+      background-color: #333;
+      color: #333;
+      transition: background-color 0.4s, color 0.4s;
+    }
+
+    .switch {
+      position: absolute;
+      display: flex;
+      top: 35%;
+      right: 2%;
+      width: 60px;
+      height: 34px;
+    }
+
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: 0.4s;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: #2196F3;
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+
+    input:checked ~ main {
+      background-color: #333;
+      color: #f2f2f2;
+      transition: background-color 0.4s, color 0.4s;
+    }
+
+    .slider.round {
+      border-radius: 34px;
+    }
+
+    .slider.round:before {
+      border-radius: 50%;
+    }
+    .filter-options {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1%;
+    }
+
+    .filter-options label {
+      font-size: 100%;
+      font-weight: bold;
+      margin-right: 1%;
+    }
+
+    .filter-options select {
+      padding: 1%;
+      font-size: 100%;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+      background-color: #f2f2f2;
+      color: #333;
+      outline: none;
+    }
+
+    .checked {
+      color: orange;
+    }
+  </style>
+</head>
+<body>
+
+<header>    <div class="select-container">
+
+</div>
+
+
+
+  <h1>
+        <span class="logo">
+            <img src="logo.png" alt="Craigslist Logo" height="100">
+        </span>
+    Craigslist
+  </h1>
+
+  <nav>
+    <label class="switch">
+      <input id="modeSwitch" type="checkbox">
+      <span class="slider round"></span>
+    </label>
+    <ul>
+      <li>
+        <a href="#">Jobs</a>
+        <div class="popup-menu">
+          <ul>
+            <li><a href="#">Accounting/Finance</a></li>
+            <li><a href="#">Admin/Office</a></li>
+            <li><a href="#">Arch/Engineering</a></li>
+            <li><a href="#">Art/Media/Design</a></li>
+            <li><a href="#">Biotech/Science</a></li>
+            <li><a href="#">Business/Mgmt</a></li>
+            <li><a href="#">Customer Service</a></li>
+            <li><a href="#">Education</a></li>
+            <li><a href="#">Etc/Misc</a></li>
+            <li><a href="#">Food/Bev/Hosp</a></li>
+            <li><a href="#">General Labor</a></li>
+            <li><a href="#">Government</a></li>
+            <li><a href="#">Human Resources</a></li>
+            <li><a href="#">Legal/Paralegal</a></li>
+            <li><a href="#">Manufacturing</a></li>
+            <li><a href="#">Marketing/PR/Ad</a></li>
+            <li><a href="#">Medical/Health</a></li>
+            <li><a href="#">Nonprofit Sector</a></li>
+            <li><a href="#">Real Estate</a></li>
+            <li><a href="#">Retail/Wholesale</a></li>
+            <li><a href="#">Sales/Biz Dev</a></li>
+            <li><a href="#">Salon/Spa/Fitness</a></li>
+            <li><a href="#">Security</a></li>
+            <li><a href="#">Skilled Trade/Craft</a></li>
+            <li><a href="#">Software/QA/DBA</a></li>
+            <li><a href="#">Systems/Network</a></li>
+            <li><a href="#">Technical Support</a></li>
+            <li><a href="#">Transport</a></li>
+            <li><a href="#">TV/Film/Video</a></li>
+            <li><a href="#">Web/Info Design</a></li>
+            <li><a href="#">Writing/Editing</a></li>
+          </ul>
+        </div>
+      </li>
+
+      <li>
+        <a href="#">Housing</a>
+        <div class="popup-menu">
+          <ul>
+            <li><a href="#">Apts / Housing</a></li>
+            <li><a href="#">Housing Swap</a></li>
+            <li><a href="#">Housing Wanted</a></li>
+            <li><a href="#">Office / Commercial</a></li>
+            <li><a href="#">Parking / Storage</a></li>
+            <li><a href="#">Real Estate For Sale</a></li>
+            <li><a href="#">Rooms / Shared</a></li>
+            <li><a href="#">Rooms Wanted</a></li>
+            <li><a href="#">Sublets / Temporary</a></li>
+            <li><a href="#">Vacation Rentals</a></li>
+          </ul>
+        </div>
+      </li>
+
+      <li>
+        <a href="#">For Sale</a>
+        <div class="popup-menu">
+          <ul>
+            <li><a href="#">Antiques</a></li>
+            <li><a href="#">Appliances</a></li>
+            <li><a href="#">Arts/Crafts</a></li>
+            <li><a href="#">ATV/UTV/Sno</a></li>
+            <li><a href="#">Auto Parts</a></li>
+            <li><a href="#">Aviation</a></li>
+            <li><a href="#">Baby/Kid</a></li>
+            <li><a href="#">Barter</a></li>
+            <li><a href="#">Beauty/Health</a></li>
+            <li><a href="#">Bike Parts</a></li>
+            <li><a href="#">Bikes</a></li>
+            <li><a href="#">Boat Parts</a></li>
+            <li><a href="#">Boats</a></li>
+            <li><a href="#">Books</a></li>
+            <li><a href="#">Business</a></li>
+            <li><a href="#">Cars/Trucks</a></li>
+            <li><a href="#">CDs/DVD/VHS</a></li>
+            <li><a href="#">Cell Phones</a></li>
+            <li><a href="#">Clothes/Accessories</a></li>
+            <li><a href="#">Collectibles</a></li>
+            <li><a href="#">Computer Parts</a></li>
+            <li><a href="#">Computers</a></li>
+            <li><a href="#">Electronics</a></li>
+            <li><a href="#">Farm/Garden</a></li>
+            <li><a href="#">Free</a></li>
+            <li><a href="#">Furniture</a></li>
+            <li><a href="#">Garage Sale</a></li>
+            <li><a href="#">General</a></li>
+            <li><a href="#">Heavy Equip</a></li>
+            <li><a href="#">Household</a></li>
+            <li><a href="#">Jewelry</a></li>
+            <li><a href="#">Materials</a></li>
+            <li><a href="#">Motorcycle Parts</a></li>
+            <li><a href="#">Motorcycles</a></li>
+            <li><a href="#">Music Instr</a></li>
+            <li><a href="#">Photo/Video</a></li>
+            <li><a href="#">RVs/Camp</a></li>
+            <li><a href="#">Sporting</a></li>
+            <li><a href="#">Tickets</a></li>
+            <li><a href="#">Tools</a></li>
+            <li><a href="#">Toys/Games</a></li>
+            <li><a href="#">Trailers</a></li>
+            <li><a href="#">Video Gaming</a></li>
+            <li><a href="#">Wanted</a></li>
+            <li><a href="#">Wheels/Tires</a></li>
+          </ul>
+        </div>
+      </li>
+
+      <li>
+        <a href="#">Services</a>
+        <div class="popup-menu">
+          <ul>
+            <li><a href="#">Automotive</a></li>
+            <li><a href="#">Beauty</a></li>
+            <li><a href="#">Cell/Mobile</a></li>
+            <li><a href="#">Computer</a></li>
+            <li><a href="#">Creative</a></li>
+            <li><a href="#">Cycle</a></li>
+            <li><a href="#">Event</a></li>
+            <li><a href="#">Farm+Garden</a></li>
+            <li><a href="#">Financial</a></li>
+            <li><a href="#">Health/Well</a></li>
+            <li><a href="#">Household</a></li>
+            <li><a href="#">Labor/Move</a></li>
+            <li><a href="#">Legal</a></li>
+            <li><a href="#">Lessons</a></li>
+            <li><a href="#">Marine</a></li>
+            <li><a href="#">Pet</a></li>
+            <li><a href="#">Real Estate</a></li>
+            <li><a href="#">Skilled Trade</a></li>
+            <li><a href="#">Sm Biz Ads</a></li>
+            <li><a href="#">Travel/Vac</a></li>
+            <li><a href="#">Write/Ed/Tran</a></li>
+          </ul>
+        </div>
+      </li>
+
+      <li>
+        <a href="#">Community</a>
+        <div class="popup-menu">
+          <ul>
+            <li><a href="#">Activities</a></li>
+            <li><a href="#">Artists</a></li>
+            <li><a href="#">Childcare</a></li>
+            <li><a href="#">Classes</a></li>
+            <li><a href="#">Events</a></li>
+            <li><a href="#">General</a></li>
+            <li><a href="#">Groups</a></li>
+            <li><a href="#">Local News</a></li>
+            <li><a href="#">Lost+Found</a></li>
+            <li><a href="#">Missed Connections</a></li>
+            <li><a href="#">Musicians</a></li>
+            <li><a href="#">Pets</a></li>
+            <li><a href="#">Politics</a></li>
+            <li><a href="#">Rants & Raves</a></li>
+            <li><a href="#">Rideshare</a></li>
+            <li><a href="#">Volunteers</a></li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <a href="#">Gigs</a>
+        <div class="popup-menu">
+          <ul>
+            <li><a href="#">computer</a></li>
+            <li><a href="#">creative</a></li>
+            <li><a href="#">crew</a></li>
+            <li><a href="#">domestic</a></li>
+            <li><a href="#">event</a></li>
+            <li><a href="#">labor</a></li>
+            <li><a href="#">talent</a></li>
+            <li><a href="#">writing</a></li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <a href="#">Discussion Forums</a>
+        <div class="popup-menu">
+          <ul>
+            <li><a href="#">Apple</a></li>
+            <li><a href="#">Arts</a></li>
+            <li><a href="#">Atheist</a></li>
+            <li><a href="#">Autos</a></li>
+            <li><a href="#">Beauty</a></li>
+            <li><a href="#">Bikes</a></li>
+            <li><a href="#">Celebs</a></li>
+            <li><a href="#">Comp</a></li>
+            <li><a href="#">Cosmos</a></li>
+            <li><a href="#">Diet</a></li>
+            <li><a href="#">Divorce</a></li>
+            <li><a href="#">Dying</a></li>
+            <li><a href="#">Eco</a></li>
+            <li><a href="#">Feedbk</a></li>
+            <li><a href="#">Film</a></li>
+            <li><a href="#">Fixit</a></li>
+            <li><a href="#">Food</a></li>
+            <li><a href="#">Frugal</a></li>
+            <li><a href="#">Gaming</a></li>
+            <li><a href="#">Garden</a></li>
+            <li><a href="#">Haiku</a></li>
+            <li><a href="#">Help</a></li>
+            <li><a href="#">History</a></li>
+            <li><a href="#">Housing</a></li>
+            <li><a href="#">Jobs</a></li>
+            <li><a href="#">Jokes</a></li>
+            <li><a href="#">Legal</a></li>
+            <li><a href="#">Manners</a></li>
+            <li><a href="#">Marriage</a></li>
+            <li><a href="#">Money</a></li>
+            <li><a href="#">Music</a></li>
+            <li><a href="#">Open</a></li>
+            <li><a href="#">Parent</a></li>
+            <li><a href="#">Pets</a></li>
+            <li><a href="#">Philos</a></li>
+            <li><a href="#">Photo</a></li>
+            <li><a href="#">Politics</a></li>
+            <li><a href="#">Psych</a></li>
+            <li><a href="#">Recover</a></li>
+            <li><a href="#">Religion</a></li>
+            <li><a href="#">Rofo</a></li>
+            <li><a href="#">Science</a></li>
+            <li><a href="#">Spirit</a></li>
+            <li><a href="#">Sports</a></li>
+            <li><a href="#">Super</a></li>
+            <li><a href="#">Tax</a></li>
+            <li><a href="#">Travel</a></li>
+            <li><a href="#">TV</a></li>
+            <li><a href="#">Vegan</a></li>
+            <li><a href="#">Words</a></li>
+            <li><a href="#">Writing</a></li>
+          </ul>
+        </div>
+      </li>
+      <li>
+        <a href="#">Resumes</a>
+        <ul>
+        </ul>
+        </div>
+      </li>
+      <div class="menu-container">
+        <input type="checkbox" id="menu-toggle" visibility: hidden >
+        <label for="menu-toggle" class="menu-btn">
+          <span></span>
+          <span></span>
+          <span></span>
+        </label>
+        <ul class="menu">
+          <li><a href="#">Help</a></li>
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Abuse</a></li>
+          <li><a href="#">Legal</a></li>
+          <li class="menu-divider"></li>
+          <li><a href="#">Avoid Scams & Fraud</a></li>
+          <li><a href="#">Personal Safety Tips</a></li>
+          <li class="menu-divider"></li>
+          <li><a href="#">Terms of Use</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">System Status</a></li>
+          <li class="menu-divider"></li>
+          <li><a href="#">About Craigslist</a></li>
+          <li><a href="#">Craigslist is Hiring</a></li>
+          <li><a href="#">Craigslist Open Source</a></li>
+          <li><a href="#">Craigslist Blog</a></li>
+          <li><a href="#">Best-of-Craigslist</a></li>
+          <li><a href="#">"Craigslist Joe"</a></li>
+          <li><a href="#">Craig Newmark Philanthropies</a></li>
+        </ul>
+      </div>
+
+      <div class="search-bar">
+        <input type="text" class="search-input" placeholder="Search...">
+        <a href="#" class="search-button">Search</a>
+      </div>
+
+
+
+
+
+    </ul>
+
+    <script src="craigslist.js"></script>
+  </nav>
+
+</header>
+
+
+
+
+<div class="account-section">
+  <div>
+    <a href="#" class="create-account-button">Create Account</a>
+    <a href="#" class="my-account-button">My Account</a>
+    <a href="#" class="create-posting-button">create a posting</a>
+  </div>
+  <div class="location-selector">
+    <input type="radio" id="new-york" name="location" value="New York">
+    <label for="new-york">New York</label>
+
+    <input type="radio" id="mnh" name="location" value="Manhattan">
+    <label for="mnh">Manhattan</label>
+
+    <input type="radio" id="brk" name="location" value="Brooklyn">
+    <label for="brk">Brooklyn</label>
+
+    <input type="radio" id="que" name="location" value="Queens">
+    <label for="que">Queens</label>
+
+    <input type="radio" id="brx" name="location" value="Bronx">
+    <label for="brx">Bronx</label>
+
+    <input type="radio" id="stn" name="location" value="Staten Island">
+    <label for="stn">Staten Island</label>
+
+    <input type="radio" id="jsy" name="location" value="New Jersey">
+    <label for="jsy">New Jersey</label>
+
+    <input type="radio" id="lgi" name="location" value="Long Island">
+    <label for="lgi">Long Island</label>
+
+    <input type="radio" id="wch" name="location" value="Westchester">
+    <label for="wch">Westchester</label>
+
+    <input type="radio" id="fct" name="location" value="Fairfield">
+    <label for="fct">Fairfield</label>
+  </div>
+  <select name="lang" id="chlang" class="js-only">
+    <option value="?lang=da&amp;setlang=1">dansk</option>
+    <option value="?lang=de&amp;setlang=1">deutsch</option>
+    <option selected="" value="?lang=en&amp;cc=us&amp;setlang=1">english</option>
+    <option value="?lang=es&amp;cc=mx&amp;setlang=1">español</option>
+    <option value="?lang=fr&amp;setlang=1">français</option>
+    <option value="?lang=it&amp;setlang=1">italiano</option>
+    <option value="?lang=pt&amp;setlang=1">português</option>
+    <option value="?lang=fi&amp;setlang=1">suomi</option>
+    <option value="?lang=sv&amp;setlang=1">svenska</option>
+    <option value="?lang=vi&amp;setlang=1">tiếng việt</option>
+    <option value="?lang=tr&amp;setlang=1">türkçe</option>
+    <option value="?lang=ru&amp;setlang=1">русский</option>
+    <option value="?lang=zh&amp;setlang=1">中文</option>
+    <option value="?lang=ja&amp;setlang=1">日本語</option>
+    <option value="?lang=ko&amp;setlang=1">한국말</option>
+  </select>
+
+
+</div>
+</div>
+
+<main>
+
+
+  <div class="content">
+    <h2 class="titletext">Popular Categories</h2>
+    <div class="category">
+      <a href="#" style="background-image: url('houses.png');">
+        <span>Apartments and Houses</span>
+      </a>
+      <a href="#" style="background-image: url('computer.jpg');">
+        <span>Computer Parts</span>
+      </a>
+      <a href="#" style="background-image: url('lostandfound.jpg');">
+        <span>Lost + Found</span>
+      </a>
+      <a href="#" style="background-image: url('event.jpg');">
+        <span>Event</span>
+      </a>
+      <a href="#" style="background-image: url('artmediadesign.jpg');">
+        <span>Art / Media / Design</span>
+      </a>
+      <a href="#" style="background-image: url('pet.jpg');">
+        <span>Pets</span>
+      </a>
+    </div>
+
+    <h2 class="titletext">Featured Listings</h2>
+    <div class="filter-options">
+      <label for="sort">Sort By:</label>
+      <select id="sort" onchange="sortListings()">
+        <option value="default">Most relevant</option>
+        <option value="default">Oldest first</option>
+        <option value="default">Newest first</option>
+        <option value="default">Closest</option>
+        <option value="priceLowToHigh">Price: Low to High</option>
+        <option value="priceHighToLow">Price: High to Low</option>
+      </select>
+    </div>
+    <div class="featured-listings">
+      <div class="featured-listing">
+        <img src="mowinggrass.jpg" alt="Listing 1" class="listing-image" width="200" height="150">
+        <div class="listing-details">
+          <h2 class="listing-title">Grass Mowing Job</h2>
+          <p class="listing-description">We are looking for someone to mow the grass in our backyard. The job involves mowing, edging, and cleanup. Experience with lawn maintenance is preferred.</p>
+          <p class="listing-price">$99.99</p>
+          <span class="fa fa-star checked"></span>
+          <span class="fa fa-star checked"></span>
+          <span class="fa fa-star checked"></span>
+          <span class="fa fa-star"></span>
+          <span class="fa fa-star"></span>
+        </div>
+      </div>
+
+      <div class="featured-listing">
+        <img src="paintjob.jpg" alt="Listing 2" class="listing-image" width="200" height="150">
+        <div class="listing-details">
+          <h2 class="listing-title">House Painting Job</h2>
+          <p class="listing-description">We are seeking experienced painters to paint the exterior walls of our house. Must have knowledge of different painting techniques and be able to work efficiently. Paint and supplies will be provided.</p>
+          <p class="listing-price">$149.99</p>
+          <span class="fa fa-star checked"></span>
+          <span class="fa fa-star checked"></span>
+          <span class="fa fa-star checked"></span>
+          <span class="fa fa-star checked"></span>
+          <span class="fa fa-star"></span>
+        </div>
+      </div>
+
+      <div class="featured-listing">
+        <img src="car-repair.jpg" alt="Listing 3" class="listing-image" width="200" height="150">
+        <div class="listing-details">
+          <h2 class="listing-title">Car Repair Services</h2>
+          <p class="listing-description">Our auto repair shop offers a wide range of services, including engine repairs, brake replacements, and electrical diagnostics. We have experienced mechanics and use high-quality parts.</p>
+          <p class="listing-price">$79.99</p>
+          <span class="fa fa-star checked"></span>
+          <span class="fa fa-star checked"></span>
+          <span class="fa fa-star"></span>
+          <span class="fa fa-star"></span>
+          <span class="fa fa-star"></span>
+        </div>
+      </div>
+
+      <div class="featured-listing">
+        <img src="cleaning.jpeg" alt="Listing 5" class="listing-image" width="200" height="150">
+        <div class="listing-details">
+          <h2 class="listing-title">House Cleaning Services</h2>
+          <p class="listing-description">We provide professional house cleaning services tailored to your needs. Our team uses eco-friendly products and offers thorough cleaning of all areas, including bathrooms, kitchens, and living spaces.</p>
+          <p class="listing-price">$49.99</p>
+          <span class="fa fa-star checked"></span>
+          <span class="fa fa-star checked"></span>
+          <span class="fa fa-star checked"></span>
+          <span class="fa fa-star checked"></span>
+          <span class="fa fa-star"></span>
+        </div>
+      </div>
+
+      <div class="featured-listing">
+        <img src="gardening.jpg" alt="Listing 6" class="listing-image" width="200" height="150">
+        <div class="listing-details">
+          <h2 class="listing-title">Gardening and Landscaping</h2>
+          <p class="listing-description">Need help with your garden? Our gardening and landscaping services cover everything from planting flowers to maintaining lawns and designing outdoor spaces. Contact us for a free consultation.</p>
+          <p class="listing-price">$199.99</p>
+          <span class="fa fa-star checked"></span>
+          <span class="fa fa-star checked"></span>
+          <span class="fa fa-star checked"></span>
+          <span class="fa fa-star checked"></span>
+          <span class="fa fa-star checked"></span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="pagination">
+      <span class="page-number">Previous</span>
+      <span class="page-number active">1</span>
+      <span class="page-number">2</span>
+      <span class="page-number">3</span>
+      <span class="page-number">Next</span>
+    </div>
+  </div>
+
+
+</main>
+<div class="calendar">
+  <div class="calendar-header">
+    <button id="prevBtn">&lt;</button>
+    <span id="currentMonth"></span>
+    <button id="nextBtn">&gt;</button>
+  </div>
+  <div class="calendar-days"></div>
+</div>
+
+
+<script>
+
+  const currentDate = new Date();
+
+  const months = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+  const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const currentMonthElement = document.getElementById('currentMonth');
+  const calendarDaysElement = document.querySelector('.calendar-days');
+
+
+  function displayCurrentMonth() {
+    const currentMonth = currentDate.getMonth();
+    const currentYear = currentDate.getFullYear();
+    currentMonthElement.textContent = `${months[currentMonth]} ${currentYear}`;
+  }
+
+
+  function generateCalendar() {
+
+    calendarDaysElement.innerHTML = '';
+
+
+    const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+    const startingDay = firstDay.getDay();
+
+
+    const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+
+
+    for (let i = 0; i < startingDay; i++) {
+      const emptyDayElement = document.createElement('div');
+      emptyDayElement.classList.add('calendar-day');
+      calendarDaysElement.appendChild(emptyDayElement);
+    }
+
+    for (let day = 1; day <= daysInMonth; day++) {
+      const calendarDayElement = document.createElement('div');
+      calendarDayElement.classList.add('calendar-day');
+      if (currentDate.getDate() === day && currentDate.getMonth() === new Date().getMonth()) {
+        calendarDayElement.classList.add('today');
+      }
+      calendarDayElement.textContent = day;
+      calendarDaysElement.appendChild(calendarDayElement);
+    }
+  }
+
+
+  function prevMonth() {
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    displayCurrentMonth();
+    generateCalendar();
+  }
+
+
+  function nextMonth() {
+    currentDate.setMonth(currentDate.getMonth() + 1);
+    displayCurrentMonth();
+    generateCalendar();
+  }
+
+
+  prevBtn.addEventListener('click', prevMonth);
+  nextBtn.addEventListener('click', nextMonth);
+
+
+  displayCurrentMonth();
+  generateCalendar();
+</script>
+
+
+<footer>
+  <ul class="clfooter">
+    <li>© 2023 <span class="desktop">craigslist</span></li>
+    <li><a href="https://www.craigslist.org/about/help/">help</a></li>
+    <li><a href="https://www.craigslist.org/about/scams">safety</a></li>
+    <li class="desktop"><a href="https://www.craigslist.org/about/privacy.policy">privacy</a></li>
+    <li class="desktop"><a href="https://forums.craigslist.org/?forumID=8">feedback</a></li>
+    <li><a href="https://www.craigslist.org/about/terms.of.use">terms</a></li>
+    <li><a href="https://www.craigslist.org/about/">about</a></li>
+    <li><a href="https://www.craigslist.org/about/craigslist_app">craigslist app</a></li>
+    <li><a href="https://www.craigslist.org/about/craigslist_is_hiring">cl is hiring</a></li>
+    <li><a href="https://newyork.craigslist.org/sitemap.html">sitemap</a></li>
+
+  </ul>
+</footer>
+</body>
+
+</html>
